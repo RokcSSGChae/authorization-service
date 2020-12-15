@@ -21,6 +21,10 @@
 - Spring AOP를 이용해 캐시 적용 (Redis)
 
 ## 👌 구현할 기능 목록
+- 암호화 알고리즘
+  - 해싱 (SHA-256)
+  - SALT (java.security.SecureRandom 이용)
+  - key-stretching  
 - 회원가입
   - 이메일 인증
   - Vaildator (아이디, 비밀번호, 이메일) - ajax
