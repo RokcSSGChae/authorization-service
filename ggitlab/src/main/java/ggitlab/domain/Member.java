@@ -2,14 +2,30 @@ package ggitlab.domain;
 
 import java.sql.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.Id;
+
+@Entity
 public class Member {
+
+	@Id
 	private String id;
 	private String password;
 	private String salt;
 	private String email;
 	private char type;
-	private Date regdate;
-	private Date dropdate;
+
+	@Column(name = "register_date", updatable = false)
+	@CreationTimestamp
+	private Date registerDate;
+
+	@Column(name = "modified_date")
+	@UpdateTimestamp
+	private Date modifiedDate;
 
 	public String getId() {
 		return id;
@@ -51,19 +67,19 @@ public class Member {
 		this.type = type;
 	}
 
-	public Date getRegdate() {
-		return regdate;
+	public Date getRegisterDate() {
+		return registerDate;
 	}
 
-	public void setRegdate(Date regdate) {
-		this.regdate = regdate;
+	public void setRegisterDate(Date registerDate) {
+		this.registerDate = registerDate;
 	}
 
-	public Date getDropdate() {
-		return dropdate;
+	public Date getModifiedDate() {
+		return modifiedDate;
 	}
 
-	public void setDropdate(Date dropdate) {
-		this.dropdate = dropdate;
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 }
