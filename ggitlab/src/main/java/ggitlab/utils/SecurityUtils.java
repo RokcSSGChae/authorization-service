@@ -9,6 +9,7 @@ public class SecurityUtils {
 	private static final Integer KEY_STRETCHING_END = 1234;
 	private static final Integer SALT_SIZE = 20;
 	private static final String HASHING_ALGORITHM = "SHA-256";
+	private static final String HEX_FORMAT = "%02x";
 
 	public static String getEncrypted(String salt, byte[] password) throws NoSuchAlgorithmException {
 		MessageDigest messageDigest = MessageDigest.getInstance(HASHING_ALGORITHM);
@@ -30,7 +31,7 @@ public class SecurityUtils {
 	private static String bytesToString(byte[] temp) {
 		StringBuilder sb = new StringBuilder();
 		for (byte b : temp) {
-			sb.append(String.format("%02x", b));
+			sb.append(String.format(HEX_FORMAT, b));
 		}
 		return sb.toString();
 	}
