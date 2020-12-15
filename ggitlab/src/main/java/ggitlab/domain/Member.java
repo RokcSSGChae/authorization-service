@@ -27,59 +27,46 @@ public class Member {
 	@UpdateTimestamp
 	private Date modifiedDate;
 
-	public String getId() {
-		return id;
+	public Member() {
 	}
 
-	public void setId(String id) {
+	public Member(String id, String password, String salt, String email, char type, Date registerDate,
+			Date modifiedDate) {
+		super();
 		this.id = id;
+		this.password = password;
+		this.salt = salt;
+		this.email = email;
+		this.type = type;
+		this.registerDate = registerDate;
+		this.modifiedDate = modifiedDate;
+	}
+
+	public String getId() {
+		return id;
 	}
 
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getSalt() {
 		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public char getType() {
 		return type;
-	}
-
-	public void setType(char type) {
-		this.type = type;
 	}
 
 	public Date getRegisterDate() {
 		return registerDate;
 	}
 
-	public void setRegisterDate(Date registerDate) {
-		this.registerDate = registerDate;
-	}
-
 	public Date getModifiedDate() {
 		return modifiedDate;
-	}
-
-	public void setModifiedDate(Date modifiedDate) {
-		this.modifiedDate = modifiedDate;
 	}
 }
