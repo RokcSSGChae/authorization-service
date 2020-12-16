@@ -28,7 +28,13 @@
 - 회원가입
   - 이메일 인증
   - Vaildator (아이디, 비밀번호, 이메일) - ajax
+    - 아이디 : required, alphanumeric characters, available
+	- 비밀번호 : required, minimum 8 characters
+	- 이메일 : required, vaild, confirmation
 - 로그인
+  - Vaildator (아이디, 비밀번호)
+    - 아이디 : required
+	- 비밀번호 : required
 - 로그아웃
 - 회원 관리
   - CRUD
@@ -37,6 +43,7 @@
   - 이메일 인증
   - 임시 비밀번호 생성
   - Vaildator (이메일)
+    - 이메일 : vaild
 - 마이페이지
   - 비밀번호 변경 가능
   - 회원 탈퇴 가능
