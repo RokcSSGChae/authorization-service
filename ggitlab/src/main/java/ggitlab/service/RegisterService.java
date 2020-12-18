@@ -11,6 +11,10 @@ public class RegisterService {
 
 	@Autowired
 	MemberRepository memberRepository;
+	
+	public boolean existsById(String id) {
+		return memberRepository.existsById(id);
+	}
 
 	public void addMember(Member member) {
 		memberRepository.save(member);
