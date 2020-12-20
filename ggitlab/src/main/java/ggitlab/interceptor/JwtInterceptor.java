@@ -1,5 +1,6 @@
 package ggitlab.interceptor;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,7 @@ import ggitlab.service.JwtService;
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
 
-	private static final String HEADER_AUTH = "Authorization";
+	private static final String COOKIE_AUTH_NAME = "authorization";
 
 	@Autowired
 	private JwtService jwtService;
@@ -25,16 +26,21 @@ public class JwtInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		final String accessToken = request.getHeader(HEADER_AUTH);
+		String accessToken = null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals(COOKIE_AUTH_NAME)) {
+				accessToken = cookie.getValue();
+			}
+		}
 		if (accessToken != null) {
-			String id = jwtService.getId(accessToken);
 			if (!jwtService.isTokenExpired(accessToken)) {
 				return true;
 			}
+			String id = jwtService.getId(accessToken);
 			String refreshToken = redisTemplate.opsForValue().get(id);
-			if (!jwtService.isTokenExpired(refreshToken)) {
+			if (refreshToken != null && !jwtService.isTokenExpired(refreshToken)) {
 				String newAccessToken = jwtService.createAccessToken(id);
-				response.setHeader(HEADER_AUTH, newAccessToken);
+				response.addCookie(new Cookie(COOKIE_AUTH_NAME, newAccessToken));
 				return true;
 			}
 		}
