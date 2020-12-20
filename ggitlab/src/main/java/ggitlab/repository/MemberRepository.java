@@ -13,4 +13,6 @@ public interface MemberRepository extends Repository<Member, String> {
 	boolean existsById(String id);
 	
 	Member findById(String id);
+	
+	Member findByEmail(String email);
 }
