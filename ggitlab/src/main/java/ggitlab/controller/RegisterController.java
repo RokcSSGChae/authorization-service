@@ -39,7 +39,7 @@ import ggitlab.utils.RegisterValidator;
 import ggitlab.utils.SecurityUtils;
 
 @RestController
-public class RegisterRestController {
+public class RegisterController {
 
 	@Autowired
 	RegisterService registerService;
@@ -57,24 +57,27 @@ public class RegisterRestController {
 			for (FieldError error : list) {
 				map.put(error.getField(), error.getDefaultMessage());
 			}
+			return map;
 		}
 
 		if (registerService.existsById(regReq.getId())) {
 			map.put("id", "id is already taken.");
-		} else {
-			String salt = SecurityUtils.getSalt();
-			String password = SecurityUtils.getEncrypted(salt, regReq.getPassword().getBytes());
-			MemberBuilder memberBuilder = new MemberBuilder()
-					.id(regReq.getId())
-					.password(password)
-					.salt(salt)
-					.email(regReq.getEmail()).type('Y')
-					.registerDate(new Date(System.currentTimeMillis()))
-					.modifiedDate(new Date(System.currentTimeMillis()));
-			Member member = memberBuilder.build();
-			registerService.addMember(member);
-			map.put("success", "register success.");
+			return map;
 		}
+
+		String salt = SecurityUtils.getSalt();
+		String password = SecurityUtils.getEncrypted(salt, regReq.getPassword().getBytes());
+		MemberBuilder memberBuilder = new MemberBuilder()
+				.id(regReq.getId())
+				.password(password)
+				.salt(salt)
+				.email(regReq.getEmail())
+				.type('Y')
+				.registerDate(new Date(System.currentTimeMillis()))
+				.modifiedDate(new Date(System.currentTimeMillis()));
+		Member member = memberBuilder.build();
+		registerService.addMember(member);
+		map.put("success", "register success.");
 		return map;
 	}
 }
