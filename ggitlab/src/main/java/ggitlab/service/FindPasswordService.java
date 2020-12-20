@@ -20,6 +20,19 @@ import ggitlab.utils.SecurityUtils;
 @Service
 public class FindPasswordService {
 
+	private static final Long REDIS_KEY_EXPIRE_TIME = 1000L * 60 * 24;
+	private static final String REDIS_KEY_PREFIX = "verify_";
+
+	private static final String MAIL_TITLE = "[비밀번호 찾기] GGITLAB 이메일 인증";
+	private static final String MAIL_GUIDE = "님 안녕하세요.<br> 비밀번호를 변경하시려면 다음 링크를 클릭해주세요.<br>";
+	private static final String MAIL_LINK_PREFIX = "<a href='http://localhost:8080/findpassword/verify?";
+	private static final String ID_QUERY_STRING = "id=";
+	private static final String KEY_QUERY_STRING = "key=";
+	private static final String MAIL_LINK_SUFFIX = "'>비밀번호 변경하기</a></p>";
+
+	private static final String MAIL_ENCODING_TYPE = "UTF-8";
+	private static final String MAIL_SUB_TYPE = "html";
+
 	@Autowired
 	MemberRepository memberRepository;
 
@@ -36,21 +49,30 @@ public class FindPasswordService {
 		}
 		MimeMessage message = javaMailSender.createMimeMessage();
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-		message.setSubject("[비밀번호 찾기] GGITLAB 이메일 인증");
+		message.setSubject(MAIL_TITLE);
 		String salt = SecurityUtils.getSalt();
 		String changePasswordkey = SecurityUtils.getEncrypted(salt, salt.getBytes(StandardCharsets.UTF_8));
-		String redisKey = "changepw-" + registeredMember.getId();
+		String redisKey = REDIS_KEY_PREFIX + registeredMember.getId();
 		redisTemplate.opsForValue().set(redisKey, changePasswordkey);
-		redisTemplate.expire(redisKey, 60 * 24 * 1000, TimeUnit.MILLISECONDS);
+		redisTemplate.expire(redisKey, REDIS_KEY_EXPIRE_TIME, TimeUnit.MILLISECONDS);
 
 		StringBuilder mailContent = new StringBuilder()
-				.append(registeredMember.getId() + "님 안녕하세요.<br>")
-				.append("비밀번호를 변경하시려면 다음 링크를 클릭해주세요.<br>")
-				.append("<a href='http://localhost:8080/auth/findpassword?")
-				.append("username=" + registeredMember.getId() + "&key=" + redisKey)
-				.append("'>비밀번호 변경하기</a></p>");
-
-		message.setText(mailContent.toString(), "UTF-8", "html");
+				.append(registeredMember.getId())
+				.append(MAIL_GUIDE)
+				.append(MAIL_LINK_PREFIX)
+				.append(ID_QUERY_STRING + registeredMember.getId())
+				.append(KEY_QUERY_STRING + changePasswordkey)
+				.append(MAIL_LINK_SUFFIX);
+		message.setText(mailContent.toString(), MAIL_ENCODING_TYPE, MAIL_SUB_TYPE);
 		javaMailSender.send(message);
+	}
+
+	public boolean verifyMail(String id, String key) {
+		String redisKey = REDIS_KEY_PREFIX + id;
+		if (redisTemplate.opsForValue().get(redisKey).equals(key)) {
+			redisTemplate.delete(redisKey);
+			return true;
+		}
+		return false;
 	}
 }
