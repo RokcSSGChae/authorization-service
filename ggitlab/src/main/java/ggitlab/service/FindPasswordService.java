@@ -14,6 +14,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import ggitlab.domain.Member;
+import ggitlab.domain.MemberBuilder;
 import ggitlab.repository.MemberRepository;
 import ggitlab.utils.SecurityUtils;
 
@@ -25,9 +26,9 @@ public class FindPasswordService {
 
 	private static final String MAIL_TITLE = "[비밀번호 찾기] GGITLAB 이메일 인증";
 	private static final String MAIL_GUIDE = "님 안녕하세요.<br> 비밀번호를 변경하시려면 다음 링크를 클릭해주세요.<br>";
-	private static final String MAIL_LINK_PREFIX = "<a href='http://localhost:8080/findpassword/verify?";
+	private static final String MAIL_LINK_PREFIX = "<a href='http://localhost:8888/findpassword/verify?";
 	private static final String ID_QUERY_STRING = "id=";
-	private static final String KEY_QUERY_STRING = "key=";
+	private static final String KEY_QUERY_STRING = "&key=";
 	private static final String MAIL_LINK_SUFFIX = "'>비밀번호 변경하기</a></p>";
 
 	private static final String MAIL_ENCODING_TYPE = "UTF-8";

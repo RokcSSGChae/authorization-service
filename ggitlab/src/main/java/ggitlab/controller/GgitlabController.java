@@ -1,18 +1,23 @@
 package ggitlab.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class GgitlabController {
 
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String home() {
 		return "index.html";
 	}
 	
-	@RequestMapping("/main")
+	@GetMapping("/main")
 	public String main() {
 		return "main.html";
+	}
+	
+	@GetMapping("/changepassword")
+	public String view() {
+		return "changepassword.html";
 	}
 }

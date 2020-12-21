@@ -54,8 +54,31 @@
 </script>
 <script type="text/javascript">
 	$().ready(function() {
+		$("#sendEmailButton").click(function() {
+			sendEmail();
+		});
+	});
+	function sendEmail() {
+		let formData = $("#findPasswordForm").serialize();
+		$.ajax({
+			method : 'post',
+			url : '/findpassword',
+			data : formData,
+			dataType : 'json',
+			success : function(data) {
+				$('#findEmailMessage').empty().text(data['email']);
+				if (data['message']) {
+					$('#validEmailMessage').empty().text(data['message']);
+				}
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+	$().ready(function() {
 		$("#signInTab").click(function() {
 			$("#registerForm").addClass("hidden");
+			$("#findPasswordForm").addClass("hidden");
 			$("#signInForm").removeClass("hidden");
 			$("#signInTab").addClass("selectedTab");
 			$("#signInTab").removeClass("notselectedTab");
@@ -64,9 +87,19 @@
 		});
 		$("#registerTab").click(function() {
 			$("#signInForm").addClass("hidden");
+			$("#findPasswordForm").addClass("hidden");
 			$("#registerForm").removeClass("hidden");
 			$("#registerTab").addClass("selectedTab");
 			$("#registerTab").removeClass("notselectedTab");
+			$("#signInTab").addClass("notselectedTab");
+			$("#signInTab").removeClass("selectedTab");
+		});
+		$("#findPasswordButton").click(function() {
+			$("#signInForm").addClass("hidden");
+			$("#registerForm").addClass("hidden");
+			$("#findPasswordForm").removeClass("hidden");
+			$("#registerTab").addClass("notselectedTab");
+			$("#registerTab").removeClass("selectedTab");
 			$("#signInTab").addClass("notselectedTab");
 			$("#signInTab").removeClass("selectedTab");
 		});
@@ -144,6 +177,15 @@ form button {
 				</li>
 			</ul>
 		</div>
+		<form id="findPasswordForm" class="hidden" method="post">
+			<p class="inputGuide">EMAIL</p>
+			<div id="findPasswordEmailFormGroup">
+				<input type="text" class="emailInput" name="email" />
+				<p id="findEmailMessage" class="message"></p>
+			</div>
+			<button type="button" id="sendEmailButton">Send Email</button>
+			<h1 id="validEmailMessage"></h1>
+		</form>
 		<form id="registerForm" class="hidden" method="post">
 			<p class="inputGuide">ID</p>
 			<div id="idFormGroup">
