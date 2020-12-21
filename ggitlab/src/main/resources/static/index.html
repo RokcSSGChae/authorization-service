@@ -42,12 +42,12 @@
 			data : formData,
 			dataType : 'json',
 			success : function(data) {
+				$('#signInIdMessage').empty().text(data['id']);
+				$('#signInPasswordMessage').empty().text(data['password']);
+				$('#failureMessage').empty().text(data['failure']);
 				if (data['redirect']) {
 					location.href = data['redirect'];
 				}
-				$('#signInIdMessage').empty().text(data['id']);
-				$('#signInPasswordMessage').empty().text(data['password']);
-				$('#signInSuccessMessage').empty().text(data['failure']);
 			}
 		});
 	}
@@ -221,6 +221,7 @@ form button {
 				<input type="password" class="passwordInput" name="password" />
 				<p id="signInPasswordMessage" class="message"></p>
 			</div>
+			<h1 id="failureMessage"></h1>
 			<button type="button" id="signInButton">Sign In!</button>
 			<button type="button" id="findPasswordButton">
 				Forgot your password?
