@@ -54,6 +54,7 @@ public class SignInController {
 			String accessToken = jwtService.createAccessToken(loginMember.getId());
 			String refreshToken = jwtService.createRefreshToken(loginMember.getId());
 			response.addCookie(new Cookie("authorization", accessToken));
+			response.addCookie(new Cookie("id", signReq.getId()));
 			redisTemplate.opsForValue().set(signReq.getId(), refreshToken);
 			map.put("redirect", "/main");
 		} catch (InvalidSignInException e) {
