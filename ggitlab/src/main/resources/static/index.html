@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sign in - GGITLAB</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$().ready(function() {
+		$("#registerButton").click(function() {
+			register();
+		});
+	});
+	function register() {
+		let formData = $("#registerForm").serialize();
+		$.ajax({
+			method : 'post',
+			url : '/register',
+			data : formData,
+			dataType : 'json',
+			success : function(data) {
+				$('#idMessage').empty().text(data['id']);
+				$('#passwordMessage').empty().text(data['password']);
+				$('#emailMessage').empty().text(data['email']);
+				$('#emailConfirmMessage').empty().text(data['emailConfirm']);
+				$('#successMessage').empty().text(data['success']);
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+	$().ready(function() {
+		$("#signInButton").click(function() {
+			signin();
+		});
+	});
+	function signin() {
+		let formData = $("#signInForm").serialize();
+		$.ajax({
+			method : 'post',
+			url : '/signin',
+			data : formData,
+			dataType : 'json',
+			success : function(data) {
+				if (data['redirect']) {
+					location.href = data['redirect'];
+				}
+				$('#signInIdMessage').empty().text(data['id']);
+				$('#signInPasswordMessage').empty().text(data['password']);
+				$('#signInSuccessMessage').empty().text(data['failure']);
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+	$().ready(function() {
+		$("#sendEmailButton").click(function() {
+			sendEmail();
+		});
+	});
+	function sendEmail() {
+		let formData = $("#findPasswordForm").serialize();
+		$.ajax({
+			method : 'post',
+			url : '/findpassword',
+			data : formData,
+			dataType : 'json',
+			success : function(data) {
+				$('#findEmailMessage').empty().text(data['email']);
+				if (data['message']) {
+					$('#validEmailMessage').empty().text(data['message']);
+				}
+			}
+		});
+	}
+</script>
+<script type="text/javascript">
+	$().ready(function() {
+		$("#signInTab").click(function() {
+			$("#registerForm").addClass("hidden");
+			$("#findPasswordForm").addClass("hidden");
+			$("#signInForm").removeClass("hidden");
+			$("#signInTab").addClass("selectedTab");
+			$("#signInTab").removeClass("notselectedTab");
+			$("#registerTab").addClass("notselectedTab");
+			$("#registerTab").removeClass("selectedTab");
+		});
+		$("#registerTab").click(function() {
+			$("#signInForm").addClass("hidden");
+			$("#findPasswordForm").addClass("hidden");
+			$("#registerForm").removeClass("hidden");
+			$("#registerTab").addClass("selectedTab");
+			$("#registerTab").removeClass("notselectedTab");
+			$("#signInTab").addClass("notselectedTab");
+			$("#signInTab").removeClass("selectedTab");
+		});
+		$("#findPasswordButton").click(function() {
+			$("#signInForm").addClass("hidden");
+			$("#registerForm").addClass("hidden");
+			$("#findPasswordForm").removeClass("hidden");
+			$("#registerTab").addClass("notselectedTab");
+			$("#registerTab").removeClass("selectedTab");
+			$("#signInTab").addClass("notselectedTab");
+			$("#signInTab").removeClass("selectedTab");
+		});
+	});
+</script>
+<style type="text/css">
+ul {
+	list-style: none;
+	display: flex;
+}
+
+ul li {
+	padding: 33px;
+	font-size: x-large;
+}
+
+.hidden {
+	display: none;
+}
+
+form button {
+	width: 151px;
+	height: 38px;
+	font-size: 20px;
+}
+
+#contentsContainer {
+	width: 362.91px;
+	height: 520px;
+	text-align: center;
+	background-color: #F3E5F5;
+	display: inline-table;
+	height: 358px;
+}
+
+.inputGuide {
+	font-size: 17px;
+}
+
+.selectedTab {
+	background-color: #6200EE;
+}
+
+.selectedTab a {
+	color: #ffffff;
+}
+
+.notselectedTab {
+	background-color: #F3E5F5;
+}
+
+.notSelectedTab a {
+	color: black;
+}
+
+.message {
+	color: #d21414;
+	font-style: oblique;
+}
+
+#findPasswordButton {
+	font-size: 13px;
+}
+</style>
+</head>
+<body>
+	<div id="contentsContainer">
+		<div id="tabContainer">
+			<ul>
+				<li id="signInTab" class="selectedTab" role="presentation">
+					<a id="signInTab" href="#">Sign in</a>
+				</li>
+				<li id="registerTab" class="notselectedTab" role="presentation">
+					<a id="registerTab" href="#"> Register </a>
+				</li>
+			</ul>
+		</div>
+		<form id="findPasswordForm" class="hidden" method="post">
+			<p class="inputGuide">EMAIL</p>
+			<div id="findPasswordEmailFormGroup">
+				<input type="text" class="emailInput" name="email" />
+				<p id="findEmailMessage" class="message"></p>
+			</div>
+			<button type="button" id="sendEmailButton">Send Email</button>
+			<h1 id="validEmailMessage"></h1>
+		</form>
+		<form id="registerForm" class="hidden" method="post">
+			<p class="inputGuide">ID</p>
+			<div id="idFormGroup">
+				<input type="text" class="idInput" name="id" />
+				<p id="idMessage" class="message"></p>
+			</div>
+			<p class="inputGuide">PASSWORD</p>
+			<div id="passwordFormGroup">
+				<input type="password" class="passwordInput" name="password" />
+				<p id="passwordMessage" class="message"></p>
+			</div>
+			<p class="inputGuide">EMAIL</p>
+			<div id="emailFormGroup">
+				<input type="text" class="emailInput" name="email" />
+				<p id="emailMessage" class="message"></p>
+			</div>
+			<p class="inputGuide">EMAIL CONFIRMATION</p>
+			<div id="emailConfirmFormGroup">
+				<input type="text" class="emailConfirmInput" name="emailConfirm" />
+				<p id="emailConfirmMessage" class="message"></p>
+			</div>
+			<button type="button" id="registerButton">Register!</button>
+			<h1 id="successMessage"></h1>
+		</form>
+		<form id="signInForm" method="post">
+			<p class="inputGuide">ID</p>
+			<div id="idFormGroup">
+				<input type="text" class="idInput" name="id" />
+				<p id="signInIdMessage" class="message"></p>
+			</div>
+			<p class="inputGuide">PASSWORD</p>
+			<div id="passwordFormGroup">
+				<input type="password" class="passwordInput" name="password" />
+				<p id="signInPasswordMessage" class="message"></p>
+			</div>
+			<button type="button" id="signInButton">Sign In!</button>
+			<button type="button" id="findPasswordButton">
+				Forgot your password?
+			</button>
+		</form>
+	</div>
+</body>
+</html>

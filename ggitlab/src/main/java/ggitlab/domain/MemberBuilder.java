@@ -11,6 +11,19 @@ public class MemberBuilder {
 	private Date registerDate;
 	private Date modifiedDate;
 
+	public MemberBuilder() {
+	}
+
+	public MemberBuilder(Member member) {
+		this.id = member.getId();
+		this.password = member.getPassword();
+		this.salt = member.getSalt();
+		this.email = member.getEmail();
+		this.type = member.getType();
+		this.registerDate = member.getRegisterDate();
+		this.modifiedDate = member.getModifiedDate();
+	}
+
 	public MemberBuilder id(String id) {
 		this.id = id;
 		return this;
